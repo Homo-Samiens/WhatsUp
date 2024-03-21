@@ -1,7 +1,7 @@
-package com.sam.whatsup
+package com.sam.whatsup.view
 
 import androidx.compose.runtime.Composable
 
 @Composable
-fun LogInScreen() {
+fun StatusListScreen() {
 }

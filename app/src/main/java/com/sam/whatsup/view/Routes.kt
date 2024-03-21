@@ -1,4 +1,4 @@
-package com.sam.whatsup
+package com.sam.whatsup.view
 
 sealed class DestinationScreen(var route: String) {
     object SignUp: DestinationScreen("signUp")
