@@ -29,9 +29,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.sam.whatsup.R
+import com.sam.whatsup.WUViewModel
 
 @Composable
-fun SignUpScreen(navController: NavController) {
+fun SignUpScreen(navController: NavController, vm: WUViewModel) {
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -45,7 +46,7 @@ fun SignUpScreen(navController: NavController) {
             mutableStateOf(TextFieldValue())
         }
 
-        var mailState by remember {
+        var emailState by remember {
             mutableStateOf(TextFieldValue())
         }
 
@@ -93,8 +94,8 @@ fun SignUpScreen(navController: NavController) {
             )
 
             OutlinedTextField(
-                value = mailState,
-                onValueChange = { mailState = it },
+                value = emailState,
+                onValueChange = { emailState = it },
                 label = { Text(text = "E-Mail") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.padding(8.dp)
@@ -110,7 +111,9 @@ fun SignUpScreen(navController: NavController) {
             )
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    vm.signUp(nameState.text, phoneState.text, emailState.text, passwordState.text)
+                },
                 modifier = Modifier.padding(10.dp)
             ) {
                 Text(text = "Sign Up")

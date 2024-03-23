@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "673543565752",
+    "project_id": "whatsup-5bcfc",
+    "storage_bucket": "whatsup-5bcfc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673543565752:android:bbecafa695c0f550f89f4d",
+        "android_client_info": {
+          "package_name": "com.sam.whatsup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgMOy9rR_Pqr1vTfN5NXD_oyfKNTgzxt8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
