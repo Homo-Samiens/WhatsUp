@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.events.Event
+import com.sam.whatsup.data.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -17,17 +17,23 @@ class WUViewModel @Inject constructor(
 
     }
 
-    var inProcess = mutableStateOf(false)
-    val eventMutableState = mutableStateOf<Event<String>?>(null)
-    var signIn = mutableStateOf(false)
+    var inProgress = mutableStateOf(false)
+    private val eventMutableState = mutableStateOf<com.sam.whatsup.data.Event<String>?>(null)
+    private var signIn = mutableStateOf(false)
+    private val userData = mutableStateOf<UserData?>(null)
 
     fun signUp(name: String, phone: String, email: String, password: String) {
-        inProcess.value = true
+        inProgress.value = true
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
 
             if (it.isSuccessful) {
 
+                inProgress.value = false
+
+                Log.e("WhatsUp", "signUp: Successful")
+
                 signIn.value = true
+
                 createOrUpdateProfile(name, phone)
 
             } else {
@@ -37,26 +43,27 @@ class WUViewModel @Inject constructor(
 
     }
 
-    fun createOrUpdateProfile(
-        name: String? = null,
-        phone: String? = null,
-        imageurl: String? = null
-    ) {
-
-        var uid = auth.currentUser?.uid
-//        val userData =
-
-    }
-
-    fun handleException(exception: Exception? = null, customMessage: String = "") {
-        Log.e("WhatsUp", "WhatsUp", exception)
+    private fun handleException(exception: Exception? = null, customMessage: String = "") {
+        Log.e("WhatsUp", "SignUp-Crashed", exception)
         exception?.printStackTrace()
         val errorMsg = exception?.localizedMessage ?: ""
-        val message = if (customMessage.isNullOrEmpty()) errorMsg else customMessage
+        val message = customMessage.ifEmpty { errorMsg }
 
-//        eventMutableState.value =
+        eventMutableState.value = com.sam.whatsup.data.Event(message)
 
-        inProcess.value = false
+        inProgress.value = false
+    }
+
+    private fun createOrUpdateProfile( name: String? = null, phone: String? = null, imageurl: String? = null ) {
+
+        val uid = auth.currentUser?.uid
+        val userData = UserData(
+            userId = uid,
+            name = name ?: userData.value?.name,
+            phone = phone ?: userData.value?.phone,
+            imageUrl = imageurl ?: userData.value?.imageUrl
+        )
+
     }
 
 }

@@ -2,7 +2,7 @@ package com.sam.whatsup.util
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -22,13 +22,13 @@ fun navigateTo(navController: NavController, route: String) {
 @Composable
 fun ProgressBar() {
 
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .alpha(0.5f)
             .background(Color.LightGray),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         CircularProgressIndicator()

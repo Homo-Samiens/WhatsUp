@@ -129,7 +129,7 @@ fun SignUpScreen(navController: NavController, vm: WUViewModel) {
 
         }
 
-        if (vm.inProcess.value) {
+        if (vm.inProgress.value) {
             ProgressBar()
         }
 
