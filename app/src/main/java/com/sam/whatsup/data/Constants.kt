@@ -1,4 +1,3 @@
 package com.sam.whatsup.data
 
-class Constants {
-}
+const val USER_NODE = "User"
