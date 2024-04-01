@@ -31,9 +31,12 @@ import androidx.navigation.NavController
 import com.sam.whatsup.R
 import com.sam.whatsup.WUViewModel
 import com.sam.whatsup.util.ProgressBar
+import com.sam.whatsup.util.UserSignedIn
 
 @Composable
 fun SignUpScreen(navController: NavController, vm: WUViewModel) {
+
+    UserSignedIn(vm = vm, navController = navController)
 
     Box(
         modifier = Modifier.fillMaxSize()

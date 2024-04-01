@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sam.whatsup.view.ChatListScreen
 import com.sam.whatsup.view.DestinationScreen
 import com.sam.whatsup.view.LogInScreen
 import com.sam.whatsup.view.SignUpScreen
@@ -23,6 +24,10 @@ fun ScreenNavigation() {
 
         composable(DestinationScreen.LogIn.route){
             LogInScreen()
+        }
+
+        composable(DestinationScreen.ChatList.route){
+            ChatListScreen()
         }
 
     }

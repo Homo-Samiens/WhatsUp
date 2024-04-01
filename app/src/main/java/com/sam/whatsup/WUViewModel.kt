@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 import com.sam.whatsup.data.USER_NODE
 import com.sam.whatsup.data.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,37 +13,58 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WUViewModel @Inject constructor(
-    private val auth: FirebaseAuth,
-    private val db: FirebaseFirestore
+    private val auth: FirebaseAuth, private val db: FirebaseFirestore
 
 ) : ViewModel() {
 
+    var inProgress = mutableStateOf(false)
+    private val eventMutableState = mutableStateOf<com.sam.whatsup.data.Event<String>?>(null)
+    var signIn = mutableStateOf(false)
+    private val userData = mutableStateOf<UserData?>(null)
+
     init {
+
+        val currentUser = auth.currentUser
+        signIn.value = currentUser != null
+        currentUser?.uid?.let {
+            getUserData(it)
+        }
 
     }
 
-    var inProgress = mutableStateOf(false)
-    private val eventMutableState = mutableStateOf<com.sam.whatsup.data.Event<String>?>(null)
-    private var signIn = mutableStateOf(false)
-    private val userData = mutableStateOf<UserData?>(null)
-
     fun signUp(name: String, phone: String, email: String, password: String) {
         inProgress.value = true
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
 
-            if (it.isSuccessful) {
+        if (name.isEmpty() or phone.isEmpty() or email.isEmpty() or password.isEmpty()) {
+            handleException(customMessage = "Please Fill All Fields")
+            return
+        }
 
-                inProgress.value = false
+        inProgress.value = true
+        db.collection(USER_NODE).whereEqualTo("phone", phone).get().addOnSuccessListener {
 
-                Log.e("WhatsUp", "signUp: Successful")
+            if (it.isEmpty) {
+                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
 
-                signIn.value = true
+                    if (it.isSuccessful) {
 
-                createOrUpdateProfile(name, phone)
+                        inProgress.value = false
 
+                        Log.e("WhatsUp", "signUp: Successful")
+
+                        signIn.value = true
+
+                        createOrUpdateProfile(name, phone)
+
+                    } else {
+                        handleException(it.exception, customMessage = "Sign-Up Failed")
+                    }
+                }
             } else {
-                handleException(it.exception, customMessage = "Sign-Up Failed")
+                handleException(customMessage = "Number Already Exists")
+                inProgress.value = false
             }
+
         }
 
     }
@@ -82,15 +104,30 @@ class WUViewModel @Inject constructor(
 
                     db.collection(USER_NODE).document(uid).set(userData)
                     inProgress.value = false
+                    getUserData(uid)
+
 
                 }
 
+            }.addOnFailureListener {
+                handleException(it, "Cannot Retrieve User")
             }
-                .addOnFailureListener {
-                    handleException(it, "Cannot Retrieve User")
-                }
         }
 
+    }
+
+    private fun getUserData(uid: String) {
+        inProgress.value = true
+        db.collection(USER_NODE).document(uid).addSnapshotListener { value, error ->
+            if (error != null) {
+                handleException(error, "Cannot Retrieve User")
+            }
+            if (value != null) {
+                val user = value.toObject<UserData>()
+                userData.value = user
+                inProgress.value = false
+            }
+        }
     }
 
 }
