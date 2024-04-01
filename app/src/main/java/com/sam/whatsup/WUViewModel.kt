@@ -80,11 +80,7 @@ class WUViewModel @Inject constructor(
         inProgress.value = false
     }
 
-    private fun createOrUpdateProfile(
-        name: String? = null,
-        phone: String? = null,
-        imageurl: String? = null
-    ) {
+    private fun createOrUpdateProfile( name: String? = null, phone: String? = null, imageurl: String? = null ) {
 
         val uid = auth.currentUser?.uid
         val userData = UserData(
@@ -128,6 +124,30 @@ class WUViewModel @Inject constructor(
                 inProgress.value = false
             }
         }
+    }
+
+    fun LogIn(email: String, password: String) {
+
+        if (email.isEmpty() or password.isEmpty()) {
+            handleException(customMessage = "Please Fill All Fields")
+            return
+        } else {
+            inProgress.value = true
+            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+                if (it.isSuccessful) {
+
+                    signIn.value = true
+                    inProgress.value = false
+                    auth.currentUser?.uid?.let {
+                        getUserData(it)
+                    }
+
+                } else {
+                    handleException(it.exception, "Log-In Failed")
+                }
+            }
+        }
+
     }
 
 }

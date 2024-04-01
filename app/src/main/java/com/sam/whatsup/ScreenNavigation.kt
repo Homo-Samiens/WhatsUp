@@ -23,7 +23,7 @@ fun ScreenNavigation() {
         }
 
         composable(DestinationScreen.LogIn.route){
-            LogInScreen()
+            LogInScreen(navController, vm)
         }
 
         composable(DestinationScreen.ChatList.route){
