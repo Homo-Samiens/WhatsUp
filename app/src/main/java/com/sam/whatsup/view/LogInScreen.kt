@@ -36,7 +36,7 @@ import com.sam.whatsup.util.UserSignedIn
 @Composable
 fun LogInScreen(navController: NavController, vm: WUViewModel) {
 
-    UserSignedIn(vm = vm, navController = navController)
+    UserSignedIn(navController = navController, vm = vm)
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -92,7 +92,7 @@ fun LogInScreen(navController: NavController, vm: WUViewModel) {
 
             Button(
                 onClick = {
-                          vm.LogIn(emailState.text, passwordState.text)
+                    vm.logIn(emailState.text, passwordState.text)
                 },
                 modifier = Modifier.padding(10.dp)
             ) {

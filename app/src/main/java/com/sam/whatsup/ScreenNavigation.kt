@@ -16,19 +16,20 @@ fun ScreenNavigation() {
     val navController = rememberNavController()
     val vm = hiltViewModel<WUViewModel>()
 
-    NavHost(navController = navController, startDestination = DestinationScreen.SignUp.route){
+    NavHost(navController = navController, startDestination = DestinationScreen.SignUp.route) {
 
-        composable(DestinationScreen.SignUp.route){
+        composable(DestinationScreen.SignUp.route) {
             SignUpScreen(navController, vm)
         }
 
-        composable(DestinationScreen.LogIn.route){
+        composable(DestinationScreen.LogIn.route) {
             LogInScreen(navController, vm)
         }
 
-        composable(DestinationScreen.ChatList.route){
-            ChatListScreen()
+        composable(DestinationScreen.ChatList.route) {
+            ChatListScreen(navController, vm)
         }
 
     }
+
 }

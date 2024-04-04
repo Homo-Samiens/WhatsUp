@@ -80,7 +80,11 @@ class WUViewModel @Inject constructor(
         inProgress.value = false
     }
 
-    private fun createOrUpdateProfile( name: String? = null, phone: String? = null, imageurl: String? = null ) {
+    private fun createOrUpdateProfile(
+        name: String? = null,
+        phone: String? = null,
+        imageurl: String? = null
+    ) {
 
         val uid = auth.currentUser?.uid
         val userData = UserData(
@@ -126,7 +130,7 @@ class WUViewModel @Inject constructor(
         }
     }
 
-    fun LogIn(email: String, password: String) {
+    fun logIn(email: String, password: String) {
 
         if (email.isEmpty() or password.isEmpty()) {
             handleException(customMessage = "Please Fill All Fields")

@@ -36,7 +36,7 @@ import com.sam.whatsup.util.UserSignedIn
 @Composable
 fun SignUpScreen(navController: NavController, vm: WUViewModel) {
 
-    UserSignedIn(vm = vm, navController = navController)
+    UserSignedIn(navController = navController, vm = vm)
 
     Box(
         modifier = Modifier.fillMaxSize()
