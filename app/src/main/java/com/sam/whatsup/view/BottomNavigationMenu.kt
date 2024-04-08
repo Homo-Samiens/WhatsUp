@@ -33,7 +33,6 @@ fun BottomNavigationMenu(selectedItem: BottomNavigationBar, navController: NavCo
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(12.dp)
             .background(Color.White)
     ) {
 
@@ -42,7 +41,7 @@ fun BottomNavigationMenu(selectedItem: BottomNavigationBar, navController: NavCo
             Image(
                 painter = painterResource(id = item.icon), contentDescription = null,
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(45.dp)
                     .padding(4.dp)
                     .weight(1f)
                     .clickable {
@@ -51,7 +50,7 @@ fun BottomNavigationMenu(selectedItem: BottomNavigationBar, navController: NavCo
                 colorFilter = if (item == selectedItem)
                     ColorFilter.tint(color = Color.Black)
                 else
-                    ColorFilter.tint(Color.Gray)
+                    ColorFilter.tint(color = Color.Gray)
             )
 
         }

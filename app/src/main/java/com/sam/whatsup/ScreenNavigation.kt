@@ -8,7 +8,9 @@ import androidx.navigation.compose.rememberNavController
 import com.sam.whatsup.view.ChatListScreen
 import com.sam.whatsup.view.DestinationScreen
 import com.sam.whatsup.view.LogInScreen
+import com.sam.whatsup.view.ProfileScreen
 import com.sam.whatsup.view.SignUpScreen
+import com.sam.whatsup.view.StatusListScreen
 
 @Composable
 fun ScreenNavigation() {
@@ -28,6 +30,14 @@ fun ScreenNavigation() {
 
         composable(DestinationScreen.ChatList.route) {
             ChatListScreen(navController, vm)
+        }
+
+        composable(DestinationScreen.StatusList.route){
+            StatusListScreen(navController, vm)
+        }
+
+        composable(DestinationScreen.Profile.route){
+            ProfileScreen(navController, vm)
         }
 
     }
