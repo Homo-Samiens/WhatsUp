@@ -1,5 +1,7 @@
 package com.sam.whatsup.view
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -63,6 +65,22 @@ fun ProfileScreen(
                 selectedItem = BottomNavigationBar.CHATLIST, navController = navController
             )
 
+        }
+
+    }
+
+}
+
+@Composable
+fun DP(imageUrl: String?, vm: WUViewModel) {
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) {
+
+        uri ->
+        uri?.let {
+            vm.uploadDP(uri)
         }
 
     }
