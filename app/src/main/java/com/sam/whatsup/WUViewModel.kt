@@ -1,26 +1,31 @@
 package com.sam.whatsup
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.FirebaseStorage
 import com.sam.whatsup.data.USER_NODE
 import com.sam.whatsup.data.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class WUViewModel @Inject constructor(
-    private val auth: FirebaseAuth, private val db: FirebaseFirestore
+    private val auth: FirebaseAuth,
+    private val db: FirebaseFirestore,
+    private val storage: FirebaseStorage
 
 ) : ViewModel() {
 
     var inProgress = mutableStateOf(false)
     private val eventMutableState = mutableStateOf<com.sam.whatsup.data.Event<String>?>(null)
     var signIn = mutableStateOf(false)
-    private val userData = mutableStateOf<UserData?>(null)
+    val userData = mutableStateOf<UserData?>(null)
 
     init {
 
@@ -81,9 +86,7 @@ class WUViewModel @Inject constructor(
     }
 
     private fun createOrUpdateProfile(
-        name: String? = null,
-        phone: String? = null,
-        imageurl: String? = null
+        name: String? = null, phone: String? = null, imageurl: String? = null
     ) {
 
         val uid = auth.currentUser?.uid
@@ -151,6 +154,35 @@ class WUViewModel @Inject constructor(
                 }
             }
         }
+
+    }
+
+    fun uploadDP(uri: Uri) {
+
+        uploadImage(uri) {
+            createOrUpdateProfile(imageurl = it.toString())
+        }
+
+    }
+
+    private fun uploadImage(uri: Uri, onSuccess: (Uri) -> Unit) {
+
+        inProgress.value = true
+        val storageRef = storage.reference
+        val uuid = UUID.randomUUID()
+        val imageRef = storageRef.child("images/$uuid")
+        val uploadTask = imageRef.putFile(uri)
+        uploadTask.addOnSuccessListener {
+
+            val result = it.metadata?.reference?.downloadUrl
+
+            result?.addOnSuccessListener(onSuccess)
+            inProgress.value = false
+
+        }
+            .addOnFailureListener {
+                handleException(it)
+            }
 
     }
 
