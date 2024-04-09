@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.sam.whatsup.R
 import com.sam.whatsup.WUViewModel
-import com.sam.whatsup.util.ProgressBar
+import com.sam.whatsup.util.CommonProgressBar
 import com.sam.whatsup.util.UserSignedIn
 
 @Composable
@@ -109,7 +109,7 @@ fun LogInScreen(navController: NavController, vm: WUViewModel) {
         }
 
         if (vm.inProgress.value) {
-            ProgressBar()
+            CommonProgressBar()
         }
 
     }
