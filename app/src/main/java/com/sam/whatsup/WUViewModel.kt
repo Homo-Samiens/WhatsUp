@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
+import com.sam.whatsup.data.Event
 import com.sam.whatsup.data.USER_NODE
 import com.sam.whatsup.data.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +24,7 @@ class WUViewModel @Inject constructor(
 ) : ViewModel() {
 
     var inProgress = mutableStateOf(false)
-    private val eventMutableState = mutableStateOf<com.sam.whatsup.data.Event<String>?>(null)
+    private val eventMutableState = mutableStateOf<Event<String>?>(null)
     var signIn = mutableStateOf(false)
     val userData = mutableStateOf<UserData?>(null)
 
@@ -80,20 +81,20 @@ class WUViewModel @Inject constructor(
         val errorMsg = exception?.localizedMessage ?: ""
         val message = customMessage.ifEmpty { errorMsg }
 
-        eventMutableState.value = com.sam.whatsup.data.Event(message)
+        eventMutableState.value = Event(message)
 
         inProgress.value = false
     }
 
-    private fun createOrUpdateProfile(
-        name: String? = null, phone: String? = null, imageurl: String? = null
+    fun createOrUpdateProfile(
+        name: String? = null, number: String? = null, imageurl: String? = null
     ) {
 
         val uid = auth.currentUser?.uid
         val userData = UserData(
             userId = uid,
             name = name ?: userData.value?.name,
-            phone = phone ?: userData.value?.phone,
+            phone = number ?: userData.value?.phone,
             imageUrl = imageurl ?: userData.value?.imageUrl
         )
 
@@ -184,6 +185,13 @@ class WUViewModel @Inject constructor(
                 handleException(it)
             }
 
+    }
+
+    fun logout() {
+        auth.signOut()
+        signIn.value = false
+        userData.value = null
+        eventMutableState.value = Event("Logged Out")
     }
 
 }
