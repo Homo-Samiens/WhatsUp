@@ -50,46 +50,43 @@ fun ProfileScreen(navController: NavController, vm: WUViewModel) {
             mutableStateOf(userData?.name ?: "")
         }
         var number by rememberSaveable {
-            mutableStateOf(userData?.phone ?: "")
+            mutableStateOf(userData?.number ?: "")
         }
 
-        Box(modifier = Modifier.fillMaxSize()) {
+        Column(verticalArrangement = Arrangement.SpaceBetween) {
 
-            Column(verticalArrangement = Arrangement.SpaceBetween) {
+            ProfileContent(modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+                .padding(8.dp),
+                vm = vm,
+                name = name,
+                number = number,
+                onNameChange = { name = it },
+                onNumberChange = { number = it },
+                onBack = {
+                    navigateTo(
+                        navController = navController, route = DestinationScreen.ChatList.route
+                    )
+                },
+                onSave = {
+                    vm.createOrUpdateProfile(
+                        name = name, number = number
+                    )
+                },
+                onLogOut = {
+                    vm.logout()
+                    navigateTo(
+                        navController = navController, route = DestinationScreen.LogIn.route
+                    )
+                })
 
-                ProfileContent(modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-                    .padding(8.dp),
-                    vm = vm,
-                    name = name,
-                    number = number,
-                    onNameChange = { name = it },
-                    onNumberChange = { number = it },
-                    onBack = {
-                        navigateTo(
-                            navController = navController, route = DestinationScreen.ChatList.route
-                        )
-                    },
-                    onSave = {
-                        vm.createOrUpdateProfile(
-                            name = name, number = number
-                        )
-                    },
-                    onLogOut = {
-                        vm.logout()
-                        navigateTo(
-                            navController = navController, route = DestinationScreen.LogIn.route
-                        )
-                    })
-
-                BottomNavigationMenu(
-                    selectedItem = BottomNavigationBar.PROFILE, navController = navController
-                )
-
-            }
+            BottomNavigationMenu(
+                selectedItem = BottomNavigationBar.PROFILE, navController = navController
+            )
 
         }
+
 
     }
 

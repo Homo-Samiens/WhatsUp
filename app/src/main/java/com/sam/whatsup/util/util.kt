@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,7 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.sam.whatsup.WUViewModel
@@ -89,6 +92,18 @@ fun CommonImage(
         contentDescription = null,
         modifier = modifier,
         contentScale = contentScale
+    )
+
+}
+
+@Composable
+fun TitleText(txt: String) {
+
+    Text(
+        text = txt,
+        fontWeight = FontWeight.Bold,
+        fontSize = 35.sp,
+        modifier = Modifier.padding(8.dp)
     )
 
 }

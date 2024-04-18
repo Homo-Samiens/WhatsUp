@@ -3,11 +3,17 @@ package com.sam.whatsup
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
+import com.google.firebase.firestore.toObjects
 import com.google.firebase.storage.FirebaseStorage
+import com.sam.whatsup.data.CHATS
+import com.sam.whatsup.data.ChatData
+import com.sam.whatsup.data.ChatUser
 import com.sam.whatsup.data.Event
 import com.sam.whatsup.data.USER_NODE
 import com.sam.whatsup.data.UserData
@@ -24,9 +30,11 @@ class WUViewModel @Inject constructor(
 ) : ViewModel() {
 
     var inProgress = mutableStateOf(false)
+    var inProgressChats = mutableStateOf(false)
     private val eventMutableState = mutableStateOf<Event<String>?>(null)
     var signIn = mutableStateOf(false)
     val userData = mutableStateOf<UserData?>(null)
+    val chats = mutableStateOf<List<ChatData>>(listOf())
 
     init {
 
@@ -94,7 +102,7 @@ class WUViewModel @Inject constructor(
         val userData = UserData(
             userId = uid,
             name = name ?: userData.value?.name,
-            phone = number ?: userData.value?.phone,
+            number = number ?: userData.value?.number,
             imageUrl = imageurl ?: userData.value?.imageUrl
         )
 
@@ -180,10 +188,9 @@ class WUViewModel @Inject constructor(
             result?.addOnSuccessListener(onSuccess)
             inProgress.value = false
 
+        }.addOnFailureListener {
+            handleException(it)
         }
-            .addOnFailureListener {
-                handleException(it)
-            }
 
     }
 
@@ -192,6 +199,64 @@ class WUViewModel @Inject constructor(
         signIn.value = false
         userData.value = null
         eventMutableState.value = Event("Logged Out")
+    }
+
+    fun onAddChat(number: String) {
+
+        if (number.isEmpty() or !number.isDigitsOnly()) {
+            handleException(customMessage = "Number must be Digits Only!")
+        } else {
+            db.collection(CHATS).where(
+                Filter.or(
+                    Filter.and(
+                        Filter.equalTo("user!.number", number),
+                        Filter.equalTo("user2.number", userData.value?.number)
+                    ), Filter.and(
+                        Filter.equalTo("user1.number", userData.value?.number),
+                        Filter.equalTo("user2.number", number)
+                    )
+                )
+            ).get().addOnSuccessListener {
+                if (it.isEmpty) {
+                    db.collection(USER_NODE).whereEqualTo("number", number).get()
+                        .addOnSuccessListener {
+
+                            if (it.isEmpty) {
+                                handleException(customMessage = "Number not Found!")
+                            } else {
+
+                                val chatPartner = it.toObjects<UserData>()[0]
+                                val id = db.collection(CHATS).document().id
+                                val chat = ChatData(
+                                    chatId = id, ChatUser(
+                                        userData.value?.userId,
+                                        userData.value?.name,
+                                        userData.value?.imageUrl,
+                                        userData.value?.number
+                                    ), ChatUser(
+                                        chatPartner.userId,
+                                        chatPartner.name,
+                                        chatPartner.imageUrl,
+                                        chatPartner.number
+                                    )
+
+                                )
+
+                                db.collection(CHATS).document(id).set(chat)
+
+                            }
+
+                        }
+                        .addOnFailureListener {
+                            handleException(it)
+                        }
+
+                } else {
+                    handleException(customMessage = "Chat Already Exists")
+                }
+            }
+        }
+
     }
 
 }

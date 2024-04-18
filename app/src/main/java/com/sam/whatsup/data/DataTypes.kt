@@ -4,7 +4,7 @@ data class UserData(
 
     var userId: String? = "",
     var name: String? = "",
-    var phone: String? = "",
+    var number: String? = "",
     var imageUrl: String? = "",
 
     ) {
@@ -12,8 +12,21 @@ data class UserData(
     fun toMap() = mapOf(
         "userId" to userId,
         "name" to name,
-        "phone" to phone,
+        "number" to number,
         "imageUrl" to imageUrl
     )
 
 }
+
+data class ChatData(
+    val chatId: String? = "",
+    val user1: ChatUser = ChatUser(),
+    val user2: ChatUser = ChatUser()
+)
+
+data class ChatUser(
+    val userId: String? = "",
+    val name: String? = "",
+    val imageUrl: String? = "",
+    val number: String? = ""
+)
