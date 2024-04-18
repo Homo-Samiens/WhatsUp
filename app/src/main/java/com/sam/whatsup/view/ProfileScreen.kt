@@ -12,14 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-<<<<<<< HEAD
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-=======
-import androidx.compose.foundation.shape.CircleShape
->>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -38,7 +34,6 @@ import com.sam.whatsup.WUViewModel
 import com.sam.whatsup.util.CommonDivider
 import com.sam.whatsup.util.CommonImage
 import com.sam.whatsup.util.CommonProgressBar
-<<<<<<< HEAD
 import com.sam.whatsup.util.navigateTo
 
 @Composable
@@ -46,7 +41,9 @@ fun ProfileScreen(navController: NavController, vm: WUViewModel) {
 
     val inProgress = vm.inProgress.value
     if (inProgress) {
+
         CommonProgressBar()
+
     } else {
 
         val userData = vm.userData.value
@@ -83,14 +80,14 @@ fun ProfileScreen(navController: NavController, vm: WUViewModel) {
                     navigateTo(
                         navController = navController, route = DestinationScreen.LogIn.route
                     )
-                })
+                }
+            )
 
             BottomNavigationMenu(
                 selectedItem = BottomNavigationBar.PROFILE, navController = navController
             )
 
         }
-
 
     }
 
@@ -111,35 +108,7 @@ fun ProfileContent(
 
     val imageUrl = vm.userData.value?.imageUrl
 
-
-    Column(modifier = modifier.fillMaxSize()) {
-=======
-
-@Composable
-fun ProfileScreen(navController: NavController, vm: WUViewModel) {
-
-    val inProgress = vm.inProgress.value
-    if (inProgress) {
-        CommonProgressBar()
-    } else {
-        Column {
-//            ProfileContent()
-            BottomNavigationMenu(
-                selectedItem = BottomNavigationBar.PROFILE,
-                navController = navController
-            )
-        }
-    }
-
-}
-
-@Composable
-fun ProfileContent(vm: WUViewModel, onBack: () -> Unit, onSave: () -> Unit) {
-
-    val imageUrl = vm.userData.value?.imageUrl
-
-    Column {
->>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
+    Column(modifier = modifier) {
 
         Row(
             modifier = Modifier
@@ -148,11 +117,10 @@ fun ProfileContent(vm: WUViewModel, onBack: () -> Unit, onSave: () -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-<<<<<<< HEAD
             Text(text = "Back", Modifier.clickable { onBack.invoke() })
 
             Text(text = "Save", Modifier.clickable { onSave.invoke() })
-=======
+
             Text(text = "Back", Modifier.clickable {
                 onBack.invoke()
             })
@@ -162,75 +130,67 @@ fun ProfileContent(vm: WUViewModel, onBack: () -> Unit, onSave: () -> Unit) {
             })
 
             CommonDivider()
+
             DP(imageUrl = imageUrl, vm = vm)
->>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
 
             CommonDivider()
 
-<<<<<<< HEAD
-        CommonDivider()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
-        DP(imageUrl = imageUrl, vm = vm)
+                Text(text = "Name", modifier = Modifier.width(100.dp))
 
-        CommonDivider()
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            Text(text = "Name", modifier = Modifier.width(100.dp))
-
-            TextField(
-                value = name, onValueChange = onNameChange, colors = TextFieldDefaults.colors(
-                    focusedTextColor = Color.Black,
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent
+                TextField(
+                    value = name,
+                    onValueChange = onNameChange,
+                    colors = TextFieldDefaults.colors(
+                        focusedTextColor = Color.Black,
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent
+                    )
                 )
-            )
-=======
-            Row {
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Text(text = "Number", modifier = Modifier.width(100.dp))
+
+                TextField(
+                    value = number,
+                    onValueChange = onNumberChange,
+                    colors = TextFieldDefaults.colors(
+                        focusedTextColor = Color.Black,
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent
+                    )
+                )
 
             }
->>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
+
+            CommonDivider()
+
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp), horizontalArrangement = Arrangement.Center
+            ) {
+
+                Text(text = "LogOut", modifier = Modifier.clickable { onLogOut.invoke() })
+
+            }
 
         }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            Text(text = "Number", modifier = Modifier.width(100.dp))
-
-            TextField(
-                value = number, onValueChange = onNumberChange, colors = TextFieldDefaults.colors(
-                    focusedTextColor = Color.Black,
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent
-                )
-            )
-
-        }
-
-        CommonDivider()
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(16.dp), horizontalArrangement = Arrangement.Center
-        ) {
-
-            Text(text = "LogOut", modifier = Modifier.clickable { onLogOut.invoke() })
-
-        }
-
     }
 }
 
@@ -239,13 +199,8 @@ private fun DP(imageUrl: String?, vm: WUViewModel) {
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-<<<<<<< HEAD
     ) { uri ->
-=======
-    ) {
 
-            uri ->
->>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
         uri?.let {
             vm.uploadDP(uri)
         }
@@ -256,11 +211,8 @@ private fun DP(imageUrl: String?, vm: WUViewModel) {
 
         Column(
             modifier = Modifier
-<<<<<<< HEAD
                 .padding(10.dp)
-=======
                 .padding(8.dp)
->>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
                 .fillMaxWidth()
                 .clickable {
                     launcher.launch("image/*")
@@ -277,11 +229,8 @@ private fun DP(imageUrl: String?, vm: WUViewModel) {
 
             }
 
-<<<<<<< HEAD
             Text(text = "DP")
-=======
             Text(text = "Change DP")
->>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
 
         }
 
