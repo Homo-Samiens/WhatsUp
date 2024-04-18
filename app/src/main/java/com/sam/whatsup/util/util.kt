@@ -18,7 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+<<<<<<< HEAD
 import androidx.compose.ui.text.font.FontWeight
+=======
+>>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -94,6 +97,7 @@ fun CommonImage(
         contentScale = contentScale
     )
 
+<<<<<<< HEAD
 }
 
 @Composable
@@ -106,4 +110,6 @@ fun TitleText(txt: String) {
         modifier = Modifier.padding(8.dp)
     )
 
+=======
+>>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
 }

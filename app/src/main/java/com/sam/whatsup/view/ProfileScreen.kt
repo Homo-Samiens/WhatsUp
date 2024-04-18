@@ -8,15 +8,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+<<<<<<< HEAD
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+=======
+import androidx.compose.foundation.shape.CircleShape
+>>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -35,6 +38,7 @@ import com.sam.whatsup.WUViewModel
 import com.sam.whatsup.util.CommonDivider
 import com.sam.whatsup.util.CommonImage
 import com.sam.whatsup.util.CommonProgressBar
+<<<<<<< HEAD
 import com.sam.whatsup.util.navigateTo
 
 @Composable
@@ -109,6 +113,33 @@ fun ProfileContent(
 
 
     Column(modifier = modifier.fillMaxSize()) {
+=======
+
+@Composable
+fun ProfileScreen(navController: NavController, vm: WUViewModel) {
+
+    val inProgress = vm.inProgress.value
+    if (inProgress) {
+        CommonProgressBar()
+    } else {
+        Column {
+//            ProfileContent()
+            BottomNavigationMenu(
+                selectedItem = BottomNavigationBar.PROFILE,
+                navController = navController
+            )
+        }
+    }
+
+}
+
+@Composable
+fun ProfileContent(vm: WUViewModel, onBack: () -> Unit, onSave: () -> Unit) {
+
+    val imageUrl = vm.userData.value?.imageUrl
+
+    Column {
+>>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
 
         Row(
             modifier = Modifier
@@ -117,12 +148,26 @@ fun ProfileContent(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
+<<<<<<< HEAD
             Text(text = "Back", Modifier.clickable { onBack.invoke() })
 
             Text(text = "Save", Modifier.clickable { onSave.invoke() })
+=======
+            Text(text = "Back", Modifier.clickable {
+                onBack.invoke()
+            })
 
-        }
+            Text(text = "Save", Modifier.clickable {
+                onSave.invoke()
+            })
 
+            CommonDivider()
+            DP(imageUrl = imageUrl, vm = vm)
+>>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
+
+            CommonDivider()
+
+<<<<<<< HEAD
         CommonDivider()
 
         DP(imageUrl = imageUrl, vm = vm)
@@ -146,6 +191,11 @@ fun ProfileContent(
                     disabledContainerColor = Color.Transparent
                 )
             )
+=======
+            Row {
+
+            }
+>>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
 
         }
 
@@ -182,7 +232,6 @@ fun ProfileContent(
         }
 
     }
-
 }
 
 @Composable
@@ -190,7 +239,13 @@ private fun DP(imageUrl: String?, vm: WUViewModel) {
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
+<<<<<<< HEAD
     ) { uri ->
+=======
+    ) {
+
+            uri ->
+>>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
         uri?.let {
             vm.uploadDP(uri)
         }
@@ -201,7 +256,11 @@ private fun DP(imageUrl: String?, vm: WUViewModel) {
 
         Column(
             modifier = Modifier
+<<<<<<< HEAD
                 .padding(10.dp)
+=======
+                .padding(8.dp)
+>>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
                 .fillMaxWidth()
                 .clickable {
                     launcher.launch("image/*")
@@ -218,7 +277,11 @@ private fun DP(imageUrl: String?, vm: WUViewModel) {
 
             }
 
+<<<<<<< HEAD
             Text(text = "DP")
+=======
+            Text(text = "Change DP")
+>>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
 
         }
 

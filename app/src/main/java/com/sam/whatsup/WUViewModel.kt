@@ -9,12 +9,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
+<<<<<<< HEAD
 import com.google.firebase.firestore.toObjects
 import com.google.firebase.storage.FirebaseStorage
 import com.sam.whatsup.data.CHATS
 import com.sam.whatsup.data.ChatData
 import com.sam.whatsup.data.ChatUser
 import com.sam.whatsup.data.Event
+=======
+import com.google.firebase.storage.FirebaseStorage
+>>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
 import com.sam.whatsup.data.USER_NODE
 import com.sam.whatsup.data.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,7 +38,10 @@ class WUViewModel @Inject constructor(
     private val eventMutableState = mutableStateOf<Event<String>?>(null)
     var signIn = mutableStateOf(false)
     val userData = mutableStateOf<UserData?>(null)
+<<<<<<< HEAD
     val chats = mutableStateOf<List<ChatData>>(listOf())
+=======
+>>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
 
     init {
 
@@ -94,8 +101,13 @@ class WUViewModel @Inject constructor(
         inProgress.value = false
     }
 
+<<<<<<< HEAD
     fun createOrUpdateProfile(
         name: String? = null, number: String? = null, imageurl: String? = null
+=======
+    private fun createOrUpdateProfile(
+        name: String? = null, phone: String? = null, imageurl: String? = null
+>>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
     ) {
 
         val uid = auth.currentUser?.uid
@@ -188,6 +200,7 @@ class WUViewModel @Inject constructor(
             result?.addOnSuccessListener(onSuccess)
             inProgress.value = false
 
+<<<<<<< HEAD
         }.addOnFailureListener {
             handleException(it)
         }
@@ -256,6 +269,12 @@ class WUViewModel @Inject constructor(
                 }
             }
         }
+=======
+        }
+            .addOnFailureListener {
+                handleException(it)
+            }
+>>>>>>> eb7365fa177cdbf41fdb606ad830e87d23d670ba
 
     }
 
