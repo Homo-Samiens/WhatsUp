@@ -10,6 +10,7 @@ import com.sam.whatsup.view.DestinationScreen
 import com.sam.whatsup.view.LogInScreen
 import com.sam.whatsup.view.ProfileScreen
 import com.sam.whatsup.view.SignUpScreen
+import com.sam.whatsup.view.SingleChatScreen
 import com.sam.whatsup.view.StatusListScreen
 
 @Composable
@@ -32,11 +33,18 @@ fun ScreenNavigation() {
             ChatListScreen(navController, vm)
         }
 
-        composable(DestinationScreen.StatusList.route){
+        composable(DestinationScreen.SingleChat.route) {
+            val chatId = it.arguments?.getString("chatId")
+            chatId?.let {
+                SingleChatScreen(navController, vm, chatId)
+            }
+        }
+
+        composable(DestinationScreen.StatusList.route) {
             StatusListScreen(navController, vm)
         }
 
-        composable(DestinationScreen.Profile.route){
+        composable(DestinationScreen.Profile.route) {
             ProfileScreen(navController, vm)
         }
 

@@ -140,6 +140,7 @@ class WUViewModel @Inject constructor(
                 val user = value.toObject<UserData>()
                 userData.value = user
                 inProgress.value = false
+                populateChats()
             }
         }
     }
@@ -256,6 +257,30 @@ class WUViewModel @Inject constructor(
                 } else {
                     handleException(customMessage = "Chat Already Exists")
                 }
+            }
+        }
+
+    }
+
+    private fun populateChats() {
+
+        inProgressChats.value = true
+        db.collection(CHATS).where(
+            Filter.or(
+                Filter.equalTo("user1.userId", userData.value?.userId),
+                Filter.equalTo("user2.userId", userData.value?.userId)
+            )
+        ).addSnapshotListener { value, error ->
+            if (error != null) {
+
+                handleException(error)
+
+            }
+            if (value != null) {
+                chats.value = value.documents.mapNotNull {
+                    it.toObject<ChatData>()
+                }
+                inProgressChats.value = false
             }
         }
 

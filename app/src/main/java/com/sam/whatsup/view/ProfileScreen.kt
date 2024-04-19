@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -54,7 +55,10 @@ fun ProfileScreen(navController: NavController, vm: WUViewModel) {
             mutableStateOf(userData?.number ?: "")
         }
 
-        Column(verticalArrangement = Arrangement.SpaceBetween) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
 
             ProfileContent(modifier = Modifier
                 .weight(1f)
@@ -116,81 +120,73 @@ fun ProfileContent(
                 .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-
             Text(text = "Back", Modifier.clickable { onBack.invoke() })
 
             Text(text = "Save", Modifier.clickable { onSave.invoke() })
+        }
 
-            Text(text = "Back", Modifier.clickable {
-                onBack.invoke()
-            })
+        CommonDivider()
 
-            Text(text = "Save", Modifier.clickable {
-                onSave.invoke()
-            })
+        DP(imageUrl = imageUrl, vm = vm)
 
-            CommonDivider()
+        CommonDivider()
 
-            DP(imageUrl = imageUrl, vm = vm)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
-            CommonDivider()
+            Text(text = "Name", modifier = Modifier.width(100.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Text(text = "Name", modifier = Modifier.width(100.dp))
-
-                TextField(
-                    value = name,
-                    onValueChange = onNameChange,
-                    colors = TextFieldDefaults.colors(
-                        focusedTextColor = Color.Black,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent
-                    )
+            TextField(
+                value = name,
+                onValueChange = onNameChange,
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent
                 )
-            }
+            )
+        }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
-                Text(text = "Number", modifier = Modifier.width(100.dp))
+            Text(text = "Number", modifier = Modifier.width(100.dp))
 
-                TextField(
-                    value = number,
-                    onValueChange = onNumberChange,
-                    colors = TextFieldDefaults.colors(
-                        focusedTextColor = Color.Black,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent
-                    )
+            TextField(
+                value = number,
+                onValueChange = onNumberChange,
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent
                 )
-
-            }
-
-            CommonDivider()
-
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp), horizontalArrangement = Arrangement.Center
-            ) {
-
-                Text(text = "LogOut", modifier = Modifier.clickable { onLogOut.invoke() })
-
-            }
+            )
 
         }
+
+        CommonDivider()
+
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp), horizontalArrangement = Arrangement.Center
+        ) {
+
+            Text(text = "LogOut", modifier = Modifier.clickable { onLogOut.invoke() })
+
+        }
+
+
     }
 }
 
