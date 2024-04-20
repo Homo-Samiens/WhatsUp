@@ -18,6 +18,8 @@ import com.sam.whatsup.data.ChatUser
 import com.sam.whatsup.data.Event
 import com.sam.whatsup.data.MESSAGES
 import com.sam.whatsup.data.Message
+import com.sam.whatsup.data.STATUS
+import com.sam.whatsup.data.Status
 import com.sam.whatsup.data.USER_NODE
 import com.sam.whatsup.data.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,6 +44,8 @@ class WUViewModel @Inject constructor(
     val chatMessages = mutableStateOf<List<Message>>(listOf())
     val inProgressChatMessage = mutableStateOf(false)
     var currentChatMessageListener: ListenerRegistration? = null
+    val status = mutableStateOf<List<Status>>(listOf())
+    val inProgressStatus = mutableStateOf(false)
 
     init {
 
@@ -148,6 +152,7 @@ class WUViewModel @Inject constructor(
                 userData.value = user
                 inProgress.value = false
                 populateChats()
+                populateStatuses()
             }
         }
     }
@@ -271,7 +276,10 @@ class WUViewModel @Inject constructor(
 
     }
 
-    private fun populateChats() {
+    fun populateChats() {
+
+//        val timeDelta = 24L*60*60*100
+//        val cutOff = System.currentTimeMillis() - timeDelta
 
         inProgressChats.value = true
         db.collection(CHATS).where(
@@ -322,6 +330,70 @@ class WUViewModel @Inject constructor(
     fun depopulateMessages() {
         chatMessages.value = listOf()
         currentChatMessageListener = null
+    }
+
+    fun uploadStatus(uri: Uri) {
+
+        uploadImage(uri) {
+
+            createStatus(it.toString())
+
+        }
+
+    }
+
+    fun createStatus(imageUrl: String) {
+        val newStatus = Status(
+            ChatUser(
+                userData.value?.userId,
+                userData.value?.name,
+                userData.value?.imageUrl,
+                userData.value?.number,
+            ),
+            imageUrl,
+            System.currentTimeMillis()
+        )
+
+        db.collection(STATUS).document().set(newStatus)
+
+    }
+
+    fun populateStatuses() {
+        inProgressStatus.value = true
+        db.collection(CHATS).where(
+            Filter.or(
+                Filter.equalTo("user1.userId", userData.value?.userId),
+                Filter.equalTo("user2.userId", userData.value?.userId)
+            )
+        ).addSnapshotListener { value, error ->
+            if (error != null)
+                handleException(error)
+
+            if (value != null) {
+                val currentConnections = arrayListOf(userData.value?.userId)
+                val chats = value.toObjects<ChatData>()
+
+                chats.forEach { chat ->
+                    if (chat.user1.userId == userData.value?.userId) {
+                        currentConnections.add(chat.user2.userId)
+                    } else {
+                        currentConnections.add(chat.user1.userId)
+                    }
+                }
+
+                db.collection(STATUS).whereIn("user.userId", currentConnections)
+                    .addSnapshotListener { value, error ->
+                        if (error != null) {
+                            handleException(error)
+                        }
+                        if (value != null) {
+                            status.value = value.toObjects()
+                            inProgressStatus.value = false
+                        }
+                    }
+
+            }
+        }
     }
 
 }
