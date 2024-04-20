@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
 import com.google.firebase.storage.FirebaseStorage
@@ -15,9 +16,12 @@ import com.sam.whatsup.data.CHATS
 import com.sam.whatsup.data.ChatData
 import com.sam.whatsup.data.ChatUser
 import com.sam.whatsup.data.Event
+import com.sam.whatsup.data.MESSAGES
+import com.sam.whatsup.data.Message
 import com.sam.whatsup.data.USER_NODE
 import com.sam.whatsup.data.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.Calendar
 import java.util.UUID
 import javax.inject.Inject
 
@@ -31,10 +35,13 @@ class WUViewModel @Inject constructor(
 
     var inProgress = mutableStateOf(false)
     var inProgressChats = mutableStateOf(false)
-    private val eventMutableState = mutableStateOf<Event<String>?>(null)
+    val eventMutableState = mutableStateOf<Event<String>?>(null)
     var signIn = mutableStateOf(false)
     val userData = mutableStateOf<UserData?>(null)
     val chats = mutableStateOf<List<ChatData>>(listOf())
+    val chatMessages = mutableStateOf<List<Message>>(listOf())
+    val inProgressChatMessage = mutableStateOf(false)
+    var currentChatMessageListener: ListenerRegistration? = null
 
     init {
 
@@ -97,7 +104,7 @@ class WUViewModel @Inject constructor(
     fun createOrUpdateProfile(
         name: String? = null,
         number: String? = null,
-        imageurl: String? = null
+        imageUrl: String? = null
     ) {
 
         val uid = auth.currentUser?.uid
@@ -105,7 +112,7 @@ class WUViewModel @Inject constructor(
             userId = uid,
             name = name ?: userData.value?.name,
             number = number ?: userData.value?.number,
-            imageUrl = imageurl ?: userData.value?.imageUrl
+            imageUrl = imageUrl ?: userData.value?.imageUrl
         )
 
         uid?.let {
@@ -172,7 +179,7 @@ class WUViewModel @Inject constructor(
     fun uploadDP(uri: Uri) {
 
         uploadImage(uri) {
-            createOrUpdateProfile(imageurl = it.toString())
+            createOrUpdateProfile(imageUrl = it.toString())
         }
 
     }
@@ -201,6 +208,8 @@ class WUViewModel @Inject constructor(
         auth.signOut()
         signIn.value = false
         userData.value = null
+        depopulateMessages()
+        currentChatMessageListener = null
         eventMutableState.value = Event("Logged Out")
     }
 
@@ -284,6 +293,35 @@ class WUViewModel @Inject constructor(
             }
         }
 
+    }
+
+    fun onSendReply(chatID: String, message: String) {
+
+        val time = Calendar.getInstance().time.toString()
+        val msg = Message(userData.value?.userId)
+        db.collection(CHATS).document(chatID).collection(MESSAGES).document().set(message)
+
+    }
+
+    fun populateMessages(chatID: String) {
+        inProgressChatMessage.value = true
+        currentChatMessageListener = db.collection(CHATS).document().collection(MESSAGES)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    handleException(error)
+                }
+                if (value != null) {
+                    chatMessages.value = value.documents.mapNotNull {
+                        it.toObject<Message>()
+                    }.sortedBy { it.timestamp }
+                    inProgressChatMessage.value = false
+                }
+            }
+    }
+
+    fun depopulateMessages() {
+        chatMessages.value = listOf()
+        currentChatMessageListener = null
     }
 
 }
